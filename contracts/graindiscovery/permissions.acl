@@ -15,6 +15,33 @@
 /**
  * Sample access control list.
  */
+ 
+ rule Member {
+    description: "Allow the member read access"
+    participant: "org.graindiscovery.Member"
+    operation: READ
+    resource: "org.graindiscovery.*"
+    action: ALLOW
+}
+
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
+
+ 
 rule EverybodyCanReadEverything {
     description: "Allow all participants read access to all resources"
     participant: "org.graindiscovery.SampleParticipant"
@@ -46,20 +73,4 @@ rule SystemACL {
   operation: ALL
   resource: "org.hyperledger.composer.system.**"
   action: ALLOW
-}
-
-rule NetworkAdminUser {
-    description: "Grant business network administrators full access to user resources"
-    participant: "org.hyperledger.composer.system.NetworkAdmin"
-    operation: ALL
-    resource: "**"
-    action: ALLOW
-}
-
-rule NetworkAdminSystem {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.hyperledger.composer.system.NetworkAdmin"
-    operation: ALL
-    resource: "org.hyperledger.composer.system.**"
-    action: ALLOW
 }
