@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* global getAssetRegistry getParticipantRegistry */
 
 'use strict';
 /**
@@ -41,3 +42,45 @@ async function sampleTransaction(tx) {
     event.newValue = tx.newValue;
     emit(event);
 }
+
+/**
+ * Make an Offer for a VehicleListing
+ * @param {org.graindiscovery.fillBid} fill - the offer
+ * @transaction
+ */
+async function fillBid(fill) {
+  let grain = fill.grain;
+  let grainSeller = fill.member;
+  let bid = fill.bid;
+  let bidder = fill.bid.owner;
+  
+  if (bid.state !== 'FOR_SALE') {
+        throw new Error('Bid Not Active');
+	}
+  
+  if (bidder.balance < bid.value)
+  {
+    throw new Error('Insufficent balance for transaction');
+  }
+  
+   grainSeller.balance = grainSeller.balance + bid.value;
+   bidder.balance = bidder.balance - bid.value;
+   grain.state = 'SOLD';
+   grain.owner = bidder;
+   bid.state = 'SOLD';
+  
+  const grainRegistry = await getAssetRegistry('org.graindiscovery.Grain');
+     await grainRegistry.update(grain);
+  
+  const bidRegistry = await getAssetRegistry('org.graindiscovery.Bid');
+     await grainRegistry.update(bid);
+  
+  const userRegistry = await getParticipantRegistry('org.graindiscovery.Member');
+     await userRegistry.update(bidder);
+     await userRegistry.update(grainSeller); 
+  
+}
+
+
+
+
