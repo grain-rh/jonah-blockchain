@@ -18,6 +18,78 @@
 
 namespace org.graindiscovery
 
+/*
+Two assets are defined, Grain representing a physical quantity of grain 
+and also and ask if the LisitingState is set to FOR_SALE and Bid which represents
+a bid for a certain quantity of grain. Bids can be filled by a specified Grain object.
+For the purposes of the demo, ANY Grain object can fill a bid provided that the bidder
+has sufficient balance to pay of it. Ideally checks on quality quantity etc. will be 
+added in future.
+*/
+
+
+asset Grain identified by gid {
+  o String grainType
+  o String gid
+  o Double value
+  o ListingState state
+  --> Member owner
+  //Not needed for the demo
+  o Double coords
+  o Double grade
+  o Double quantity
+  o Double price
+  
+}
+
+asset Bid identified by bid{
+  o String grainType
+  o String bid
+  o Double value
+  o ListingState state
+  --> Member owner
+  //Not needed for the demo
+  o Double coords
+  o Double grade
+  o Double quantity
+  o Double price
+  
+}
+
+enum ListingState {
+  //For Grain Object
+  o FOR_SALE
+  o SOLD
+}
+
+abstract participant User identified by uId {
+  o String uId
+  o String firstName
+  o String lastName
+}
+
+participant Member extends User {
+  o Double balance
+}
+
+//Grain Discovery super user, removing for the moment
+//participant GrainDiscovery extends User {
+//}
+
+//Specify the Bid to be filled and the Grain to fill it with and
+//the Member filling the bid 
+transaction fillBid {
+  --> Bid bid
+  --> Grain grain
+  --> Member member
+}
+
+//Specify the Grain asset to be filled and the Member to fill it
+transaction fillAsk {
+  --> Grain grain
+  --> Member member
+}
+
 participant SampleParticipant identified by participantId {
   o String participantId
   o String firstName
