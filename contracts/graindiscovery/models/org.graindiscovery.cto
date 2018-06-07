@@ -18,31 +18,6 @@
 
 namespace org.graindiscovery
 
-rule Member {
-    description: "Allow the member read access"
-    participant: "org.graindiscovery.Member"
-    operation: READ
-    resource: "org.graindiscovery.*"
-    action: ALLOW
-}
-
-
-rule NetworkAdminUser {
-    description: "Grant business network administrators full access to user resources"
-    participant: "org.hyperledger.composer.system.NetworkAdmin"
-    operation: ALL
-    resource: "**"
-    action: ALLOW
-}
-
-rule NetworkAdminSystem {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.hyperledger.composer.system.NetworkAdmin"
-    operation: ALL
-    resource: "org.hyperledger.composer.system.**"
-    action: ALLOW
-}
-
 participant SampleParticipant identified by participantId {
   o String participantId
   o String firstName
