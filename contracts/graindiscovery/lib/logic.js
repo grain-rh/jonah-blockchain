@@ -43,5 +43,35 @@ async function sampleTransaction(tx) {
     emit(event);
 }
 
+/**
+ * Make an Offer for a VehicleListing
+ * @param {org.graindiscovery.fillBid} fill - the offer
+ * @transaction
+ */
+async function fillBid(fill) {
+    
+    let grain = fill.grain;
+    let grainSeller = fill.member;
+    let bid = fill.bid;
+    let bidder = fill.bid.owner;
+    
+    const oldValue = tx.asset.value;
+
+    // Update the asset with the new value.
+    tx.asset.value = tx.newValue;
+
+    // Get the asset registry for the asset.
+    const assetRegistry = await getAssetRegistry('org.graindiscovery.SampleAsset');
+    // Update the asset in the asset registry.
+    await assetRegistry.update(tx.asset);
+
+    // Emit an event for the modified asset.
+    let event = getFactory().newEvent('org.graindiscovery', 'SampleEvent');
+    event.asset = tx.asset;
+    event.oldValue = oldValue;
+    event.newValue = tx.newValue;
+    emit(event);
+}
+
 
 
