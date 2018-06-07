@@ -7,7 +7,6 @@
   "description": "GD",
   "scripts": {
     "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/graindiscovery.bna",
-    "pretest": "npm run lint --fix",
   },
   "keywords": [
     "composer",
