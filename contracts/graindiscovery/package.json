@@ -8,7 +8,7 @@
   "scripts": {
     "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/graindiscovery.bna",
     "pretest": "npm run lint --fix",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "test": "nyc mocha -t 0 test/*.js && cucumber-js"
   },
   "keywords": [
