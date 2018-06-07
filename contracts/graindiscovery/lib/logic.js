@@ -81,4 +81,43 @@ async function fillBid(fill) {
 
 }
 
+/**
+ * Fill an ask
+ * @param {org.graindiscovery.fillAsk} ask - the offer
+ * @transaction
+ */
+async function fillAsk(ask) {
+  
+  let grain = ask.grain;
+  let grainOwner = grain.owner;
+  let asker = ask.member;
+  
+  console.log('#### Askers Balance: ' + ask.member.balance);
+  console.log('#### Grain Owner balance: ' + ask.grain.owner.balance);
+  console.log('#### Grain Value: ' + ask.grain.value);
+  console.log('#### Grain Owner Balance: ' + ask.member.balance);
+  
+  if (grain.state !== 'FOR_SALE') {
+        throw new Error('Grain is not FOR SALE');
+  }
+  
+  if (grain.value > asker.balance)
+  {
+    throw new Error('Insufficent balance for transaction');
+  }
+  
+  grainOwner.balance = grainOwner.balance + grain.value;
+  asker.balance = asker.balance - grain.value;
+  grain.owner = asker;
+  grain.state = 'SOLD';
+
+  const grainRegistry = await getAssetRegistry('org.graindiscovery.Grain');
+    await grainRegistry.update(grain);
+  
+  const userRegistry = await getParticipantRegistry('org.graindiscovery.Member');
+    await userRegistry.update(asker);
+    await userRegistry.update(grainOwner);
+    
+}
+
 
