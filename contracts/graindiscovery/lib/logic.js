@@ -43,19 +43,5 @@ async function sampleTransaction(tx) {
     emit(event);
 }
 
-/**
- * Make an Offer for a VehicleListing
- * @param {org.graindiscovery.fillBid} fill - the offer
- * @transaction
- */
-async function fillBid(fill) {
-  let grain = fill.grain;
-  let grainSeller = fill.member;
-  let bid = fill.bid;
-  let bidder = fill.bid.owner;
-   
-}
-
-
 
 
