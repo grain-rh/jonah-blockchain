@@ -49,14 +49,36 @@ async function sampleTransaction(tx) {
  * @transaction
  */
 async function fillBid(fill) {
-    
-    let grain = fill.grain;
-    let grainSeller = fill.member;
-    let bid = fill.bid;
-    let bidder = fill.bid.owner;
-    
-    
-}
+  let grain = fill.grain;
+  let grainSeller = fill.member;
+  let bid = fill.bid;
+  let bidder = fill.bid.owner;
+  
+  if (bid.state !== 'FOR_SALE') {
+        throw new Error('Bid Not Active');
+	}
+  
+  if (bidder.balance < bid.value)
+  {
+    throw new Error('Insufficent balance for transaction');
+  }
+  
+   grainSeller.balance = grainSeller.balance + bid.value;
+   bidder.balance = bidder.balance - bid.value;
+   grain.state = 'SOLD';
+   grain.owner = bidder;
+   bid.state = 'SOLD';
+  
+  const grainRegistry = await getAssetRegistry('org.graindiscovery.Grain');
+     await grainRegistry.update(grain);
+  
+  const bidRegistry = await getAssetRegistry('org.graindiscovery.Bid');
+     await grainRegistry.update(bid);
+  
+  const userRegistry = await getParticipantRegistry('org.graindiscovery.Member');
+     await userRegistry.update(bidder);
+     await userRegistry.update(grainSeller);
 
+}
 
 
